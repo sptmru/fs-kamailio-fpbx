@@ -1,0 +1,76 @@
+services:
+  kamailio:
+    image: kamailio/kamailio-ci:5.4
+    container_name: kamailio
+    restart: unless-stopped
+    volumes:
+      - "${PWD}/kamailio:/etc/kamailio:rw"
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.200
+    ports:
+      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}/udp"
+      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT-:5060}"
+  freeswitch_one:
+    container_name: freeswitch_one
+    build:
+      context: ./freeswitch
+      dockerfile: Dockerfile
+    volumes:
+      - "${PWD}/freeswitch/conf:/usr/local/freeswitch/conf"
+    restart: unless-stopped
+    expose:
+      - "5080/udp"
+      - "5080"
+      - "8021"
+    environment:
+      - EXTENSION_PASSWORD=1234
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.101
+  freeswitch_two:
+    container_name: freeswitch_two
+    build:
+      context: ./freeswitch
+      dockerfile: Dockerfile
+    volumes:
+      - "${PWD}/freeswitch/conf:/usr/local/freeswitch/conf"
+    restart: unless-stopped
+    expose:
+      - "5080/udp"
+      - "5080"
+      - "8021"
+    environment:
+      - EXTENSION_PASSWORD=1234
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.102
+  fusionpbx_one:
+    container_name: fusionpbx_one
+    build:
+      context: ./fusionpbx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8081"
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.11
+  fusionpbx_two:
+    container_name: fusionpbx_two
+    build:
+      context: ./fusionpbx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8082"
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.12
+networks:
+  nw-default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.0.0/24
