@@ -1,0 +1,20 @@
+# Application files
+*.txt
+*.log
+logs
+.env
+build
+coverage
+
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# IDE files
+.vscode/*
+!.vscode/launch.json
+.idea
