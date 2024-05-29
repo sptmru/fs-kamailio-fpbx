@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   kamailio:
     image: kamailio/kamailio-ci:5.4
