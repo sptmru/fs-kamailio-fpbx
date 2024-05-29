@@ -32,7 +32,7 @@ RUN chmod +x /usr/local/bin/setup-fusionpbx.sh
 
 # Create /etc/fusionpbx directory
 RUN mkdir /etc/fusionpbx
-RUN chmod 755 /etc/fusionpbx
+RUN chmod 777 /etc/fusionpbx
 
 # Expose port 80
 EXPOSE 80
