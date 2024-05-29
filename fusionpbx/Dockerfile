@@ -1,4 +1,4 @@
-FROM debian:wheezy
+FROM debian:bookworm
 
 RUN groupadd -r freeswitch && useradd -r -d /var/lib/freeswitch -s /bin/false -c 'FreeSWITCH' -g freeswitch freeswitch
 
