@@ -29,7 +29,7 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.101
-    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /usr/local/bin/entrypoint.sh"]
   freeswitch_two:
     container_name: freeswitch_two
     build:
@@ -48,7 +48,7 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.102
-    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /usr/local/bin/entrypoint.sh"]
   fusionpbx_one:
     container_name: fusionpbx_one
     build:
