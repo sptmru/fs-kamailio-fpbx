@@ -26,8 +26,19 @@ RUN chown -R www-data:www-data /var/www/fusionpbx
 # Copy the Apache configuration file
 COPY apache-fusionpbx.conf /etc/apache2/sites-available/000-default.conf
 
+# Copy the setup script
+COPY setup-fusionpbx.sh /usr/local/bin/setup-fusionpbx.sh
+RUN chmod +x /usr/local/bin/setup-fusionpbx.sh
+
+# Create /etc/fusionpbx directory
+RUN mkdir /etc/fusionpbx
+RUN chmod 755 /etc/fusionpbx
+
 # Expose port 80
 EXPOSE 80
+
+# Start setup and Apache server
+# CMD ["setup-fusionpbx.sh"]
 
 # Start Apache server
 CMD ["apache2-foreground"]
