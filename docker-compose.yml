@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   kamailio:
     image: kamailio/kamailio-ci:5.4
@@ -17,7 +19,8 @@ services:
       context: ./freeswitch
       dockerfile: Dockerfile
     volumes:
-      - "${PWD}/freeswitch/conf:/usr/local/freeswitch/conf"
+      - freeswitch_one_conf:/usr/local/freeswitch/conf
+      - "${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
     expose:
       - "5080/udp"
@@ -28,13 +31,15 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.101
+    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /entrypoint.sh"]
   freeswitch_two:
     container_name: freeswitch_two
     build:
       context: ./freeswitch
       dockerfile: Dockerfile
     volumes:
-      - "${PWD}/freeswitch/conf:/usr/local/freeswitch/conf"
+      - freeswitch_two_conf:/usr/local/freeswitch/conf
+      - "${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
     expose:
       - "5080/udp"
@@ -45,6 +50,7 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.102
+    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /entrypoint.sh"]
   fusionpbx_one:
     container_name: fusionpbx_one
     build:
@@ -53,6 +59,8 @@ services:
     restart: unless-stopped
     ports:
       - "8081:80"
+    volumes:
+      - freeswitch_one_conf:/etc/freeswitch
     networks:
       nw-default:
         ipv4_address: 10.1.0.11
@@ -64,6 +72,8 @@ services:
     restart: unless-stopped
     ports:
       - "8082:80"
+    volumes:
+      - freeswitch_two_conf:/etc/freeswitch
     networks:
       nw-default:
         ipv4_address: 10.1.0.12
@@ -107,3 +117,5 @@ networks:
 volumes:
   postgres_one_volume: {}
   postgres_two_volume: {}
+  freeswitch_one_conf: {}
+  freeswitch_two_conf: {}
