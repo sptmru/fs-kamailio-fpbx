@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
   sudo \
   vim \
   libapache2-mod-php7.4 \
-  libmariadbclient-dev \
+  libmariadb-dev \
   libpq-dev \
   libsqlite3-dev \
   && docker-php-ext-install pdo_mysql pdo_pgsql pdo_sqlite \
