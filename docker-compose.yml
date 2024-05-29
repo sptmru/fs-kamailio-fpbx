@@ -104,3 +104,6 @@ networks:
       driver: default
       config:
         - subnet: 10.1.0.0/24
+volumes:
+  postgres_one_volume: {}
+  postgres_two_volume: {}
