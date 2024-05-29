@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
   curl \
   sudo \
   vim \
-  libapache2-mod-php7.4 \
   libmariadb-dev \
   libpq-dev \
   libsqlite3-dev \
