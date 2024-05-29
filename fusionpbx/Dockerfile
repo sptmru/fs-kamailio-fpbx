@@ -1,45 +1,34 @@
-FROM alpine:3.20
+# Use an official PHP image as a parent image
+FROM php:7.4-apache
 
-ENV FP_VER 5.2
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+  git \
+  curl \
+  sudo \
+  vim \
+  libapache2-mod-php7.4 \
+  libmariadbclient-dev \
+  libpq-dev \
+  libsqlite3-dev \
+  && docker-php-ext-install pdo_mysql pdo_pgsql pdo_sqlite \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN apk add --no-cache curl dnsmasq \
-  nginx php7-curl php7-fpm php7-imap php7-json php7-mcrypt php7-odbc php7-pdo php7-pdo_pgsql \
-  php7-pgsql php7-session php7-sqlite3 php7-xml php7-simplexml php7 \
-  supervisor openssl \
-  && echo "pid /tmp/nginx.pid;" >> /etc/nginx/nginx.conf \
-  && sed -e 's_nobody_nginx_g' \
-  -e 's_127.0.0.1:9000_/tmp/fpm.sock_g' \
-  -e 's_;listen.o_listen.o_g' \
-  -e 's_;listen.g_listen.g_g' \
-  -e 's_;listen.m_listen.m_g' \
-  -i /etc/php7/php-fpm.d/www.conf \
-  #    && ln /usr/bin/php7 /usr/bin/php \
-  && cd /var/www \
-  && curl -L https://github.com/fusionpbx/fusionpbx/archive/${FP_VER}.tar.gz | tar xzf - \
-  && mv fusionpbx*/ fusionpbx \
-  && chown -Rf nginx:nginx fusionpbx \
-  && chmod -R 755 fusionpbx/secure \
-  && rm -rf /etc/freeswitch/* \
-  && cp -R /var/www/fusionpbx/resources/templates/conf/* /etc/freeswitch \
-  && mkdir /usr/share/freeswitch/scripts \
-  && chown -R nginx:nginx /etc/freeswitch \
-  && mkdir /etc/fusionpbx \
-  && chown -R nginx:nginx /etc/fusionpbx \
-  && mkdir -p /data.org/lib /data.org/share /data \
-  && chmod 0777 -R /data.org \
-  && mv /etc/freeswitch /etc/fusionpbx /var/log /data.org \
-  && ln -sf /data/fusionpbx /etc/fusionpbx \
-  && ln -sf /data/log /var/log \
-  && ln -sf /data.org/lib /data/lib \
-  && ln -sf /data.org/share /data/share \
-  && ln -sf /data.org/fusionpbx /data/fusionpbx \
-  && ln -sf /data.org/log /data/log \
-  && touch /data/.ok
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
 
-VOLUME /data
+# Set up FusionPBX
+RUN git clone https://github.com/fusionpbx/fusionpbx.git /var/www/fusionpbx
 
-ADD fusionpbx-nginx.conf /etc/nginx/conf.d/default.conf
-ADD supervisord.conf /etc/
-ADD start.sh /
+# Set permissions
+RUN chown -R www-data:www-data /var/www/fusionpbx
 
-CMD /start.sh
+# Copy the Apache configuration file
+COPY apache-fusionpbx.conf /etc/apache2/sites-available/000-default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start Apache server
+CMD ["apache2-foreground"]
