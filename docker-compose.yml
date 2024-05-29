@@ -67,6 +67,36 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.12
+  postgres_one:
+    container_name: postgres_one
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_one_volume:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    restart: unless-stopped
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.21
+  postgres_two:
+    container_name: postgres_two
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_two_volume:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    restart: unless-stopped
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.22
 networks:
   nw-default:
     driver: bridge
