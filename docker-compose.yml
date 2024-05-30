@@ -83,6 +83,14 @@ services:
     restart: unless-stopped
     volumes:
       - freeswitch_one_conf:/etc/freeswitch
+    environment:
+      - ADMIN_USERNAME=${FUSIONPBX_ONE_ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${FUSIONPBX_ONE_ADMIN_PASSWORD}
+      - DOMAIN_NAME=${FUSIONPBX_ONE_DOMAIN}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=postgres_one
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fusionpbx_one.rule=Host(`${FUSIONPBX_ONE_DOMAIN}`)"
@@ -101,6 +109,14 @@ services:
     restart: unless-stopped
     volumes:
       - freeswitch_two_conf:/etc/freeswitch
+    environment:
+      - ADMIN_USERNAME=${FUSIONPBX_TWO_ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${FUSIONPBX_TWO_ADMIN_PASSWORD}
+      - DOMAIN_NAME=${FUSIONPBX_TWO_DOMAIN}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=postgres_two
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fusionpbx_two.rule=Host(`${FUSIONPBX_TWO_DOMAIN}`)"
