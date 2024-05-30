@@ -89,6 +89,7 @@ services:
       - DOMAIN_NAME=${FUSIONPBX_ONE_DOMAIN}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_HOST=postgres_one
     labels:
@@ -115,6 +116,7 @@ services:
       - DOMAIN_NAME=${FUSIONPBX_TWO_DOMAIN}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_HOST=postgres_two
     labels:
