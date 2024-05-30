@@ -28,7 +28,7 @@ sed -i "s|{database_username}|${DB_USERNAME}|" /var/www/fusionpbx/db-init.php
 sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 
 # Initialize the FusionPBX database
-php /var/www/fusionpbx/db-init.php
+/usr/local/bin/php /var/www/fusionpbx/db-init.php
 
 # Start Apache server
-exec apache2-foreground
+apache2-foreground
