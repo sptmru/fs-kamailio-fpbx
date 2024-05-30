@@ -1,4 +1,27 @@
 services:
+  traefik:
+    image: traefik:v3.0.1
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "traefik_letsencrypt:/letsencrypt"
+    networks:
+      - nw-default
+
   kamailio:
     image: kamailio/kamailio-ci:5.4
     container_name: kamailio
@@ -11,6 +34,7 @@ services:
     ports:
       - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}/udp"
       - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}"
+
   freeswitch_one:
     container_name: freeswitch_one
     build:
@@ -30,6 +54,7 @@ services:
       nw-default:
         ipv4_address: 10.1.0.101
     entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /usr/local/bin/entrypoint.sh"]
+
   freeswitch_two:
     container_name: freeswitch_two
     build:
@@ -49,32 +74,43 @@ services:
       nw-default:
         ipv4_address: 10.1.0.102
     entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /usr/local/bin/entrypoint.sh"]
+
   fusionpbx_one:
     container_name: fusionpbx_one
     build:
       context: ./fusionpbx
       dockerfile: Dockerfile
     restart: unless-stopped
-    ports:
-      - "8081:80"
     volumes:
       - freeswitch_one_conf:/etc/freeswitch
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fusionpbx_one.rule=Host(`${FUSIONPBX_ONE_DOMAIN}`)"
+      - "traefik.http.routers.fusionpbx_one.entrypoints=websecure"
+      - "traefik.http.routers.fusionpbx_one.tls.certresolver=myresolver"
+      - "traefik.http.services.fusionpbx_one.loadbalancer.server.port=80"
     networks:
       nw-default:
         ipv4_address: 10.1.0.11
+
   fusionpbx_two:
     container_name: fusionpbx_two
     build:
       context: ./fusionpbx
       dockerfile: Dockerfile
     restart: unless-stopped
-    ports:
-      - "8082:80"
     volumes:
       - freeswitch_two_conf:/etc/freeswitch
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fusionpbx_two.rule=Host(`${FUSIONPBX_TWO_DOMAIN}`)"
+      - "traefik.http.routers.fusionpbx_two.entrypoints=websecure"
+      - "traefik.http.routers.fusionpbx_two.tls.certresolver=myresolver"
+      - "traefik.http.services.fusionpbx_two.loadbalancer.server.port=80"
     networks:
       nw-default:
         ipv4_address: 10.1.0.12
+
   postgres_one:
     container_name: postgres_one
     image: postgres:16.1
@@ -90,6 +126,7 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.21
+
   postgres_two:
     container_name: postgres_two
     image: postgres:16.1
@@ -105,6 +142,7 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.22
+
 networks:
   nw-default:
     driver: bridge
@@ -112,8 +150,10 @@ networks:
       driver: default
       config:
         - subnet: 10.1.0.0/24
+
 volumes:
   postgres_one_volume: {}
   postgres_two_volume: {}
   freeswitch_one_conf: {}
   freeswitch_two_conf: {}
+  traefik_letsencrypt: {}
