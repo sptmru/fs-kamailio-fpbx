@@ -31,4 +31,4 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 /usr/local/bin/php /var/www/fusionpbx/db-init.php
 
 # Start Apache server
-apache2-foreground
+exec apache2-foreground

@@ -86,6 +86,7 @@ services:
       - freeswitch_one
     volumes:
       - freeswitch_one_conf:/etc/freeswitch
+    entrypoint: ./fusionpbx/setup-fusionpbx.sh
     environment:
       - ADMIN_USERNAME=${FUSIONPBX_ONE_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${FUSIONPBX_ONE_ADMIN_PASSWORD}
@@ -116,6 +117,7 @@ services:
       - freeswitch_two
     volumes:
       - freeswitch_two_conf:/etc/freeswitch
+    entrypoint: ./fusionpbx/setup-fusionpbx.sh
     environment:
       - ADMIN_USERNAME=${FUSIONPBX_TWO_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${FUSIONPBX_TWO_ADMIN_PASSWORD}
