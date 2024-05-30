@@ -81,6 +81,9 @@ services:
       context: ./fusionpbx
       dockerfile: Dockerfile
     restart: unless-stopped
+    depends_on:
+      - postgres_one
+      - freeswitch_one
     volumes:
       - freeswitch_one_conf:/etc/freeswitch
     environment:
@@ -108,6 +111,9 @@ services:
       context: ./fusionpbx
       dockerfile: Dockerfile
     restart: unless-stopped
+    depends_on:
+      - postgres_two
+      - freeswitch_two
     volumes:
       - freeswitch_two_conf:/etc/freeswitch
     environment:

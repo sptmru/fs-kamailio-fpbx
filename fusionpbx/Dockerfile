@@ -33,11 +33,17 @@ RUN chmod +x /usr/local/bin/setup-fusionpbx.sh
 # Create /etc/fusionpbx directory
 RUN mkdir /etc/fusionpbx
 RUN chmod 777 /etc/fusionpbx
-# COPY config.conf /etc/fusionpbx/config.conf
+
+# Copy the DB initialization script
 COPY db-init.php /var/www/fusionpbx/db-init.php
+COPY setup-fusionpbx.sh /usr/local/bin/setup-fusionpbx.sh
+RUN chmod +x /usr/local/bin/setup-fusionpbx.sh
+
+# Create DB structure and config
+RUN /usr/local/bin/setup-fusionpbx.sh
 
 # Expose port 80
 EXPOSE 80
 
-# Start setup and Apache server
-CMD ["setup-fusionpbx.sh"]
+# Start Apache server
+CMD ["apache2-foreground"]
