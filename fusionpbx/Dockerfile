@@ -40,4 +40,4 @@ COPY db-init.php /var/www/fusionpbx/db-init.php
 EXPOSE 80
 
 # Start setup and Apache server
-CMD ["setup-fusionpbx.sh"]
+ENTRYPOINT ["/usr/local/bin/setup-fusionpbx.sh"]
