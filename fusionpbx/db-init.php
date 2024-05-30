@@ -43,7 +43,7 @@ $install->database_password = $_SESSION['install']['database_password'];
 $result = $install->config();
 
 $output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
-require_once dirname(__DIR__, 2) . "/resources/require.php";
+require_once "/var/www/fusionpbx/resources/require.php";
 
 //get the domain name
 $domain_name = $_SESSION['install']['domain_name'];
