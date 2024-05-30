@@ -13,6 +13,19 @@ require_once "resources/classes/template.php";
 require_once "resources/classes/message.php";
 require_once "core/install/resources/classes/install.php";
 
+$config_exists = false;
+if (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
+  //bsd
+  $config_exists = true;
+}
+elseif (file_exists("/etc/fusionpbx/config.conf")) {
+  //linux
+  $config_exists = true;
+}
+if ($config_exists) {
+  exit;
+}
+
 session_start();
 
 $language = new text;
