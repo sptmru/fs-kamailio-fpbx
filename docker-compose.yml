@@ -41,9 +41,9 @@ services:
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_DB: kamailio
     volumes:
-      - postgres_two_volume:/var/lib/postgresql/data
+      - postgres_kamailio_volume:/var/lib/postgresql/data
     expose:
       - "5432"
     restart: unless-stopped
@@ -196,6 +196,7 @@ networks:
 volumes:
   postgres_one_volume: {}
   postgres_two_volume: {}
+  postgres_kamailio_volume: {}
   freeswitch_one_conf: {}
   freeswitch_two_conf: {}
   traefik_letsencrypt: {}
