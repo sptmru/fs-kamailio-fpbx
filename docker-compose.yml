@@ -62,6 +62,11 @@ services:
       dockerfile: Dockerfile
     volumes:
       - freeswitch_one_conf:/usr/local/freeswitch/conf
+      - freeswitch_one_sounds:/usr/local/freeswitch/sounds
+      - freeswitch_one_db:/usr/local/freeswitch/db
+      - freeswitch_one_recordings:/usr/local/freeswitch/recordings
+      - freeswitch_one_storage:/usr/local/freeswitch/storage
+      - freeswitch_one_scripts:/usr/local/freeswitch/scripts
       - "${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
     expose:
@@ -82,6 +87,11 @@ services:
       dockerfile: Dockerfile
     volumes:
       - freeswitch_two_conf:/usr/local/freeswitch/conf
+      - freeswitch_two_sounds:/usr/local/freeswitch/sounds
+      - freeswitch_two_db:/usr/local/freeswitch/db
+      - freeswitch_two_recordings:/usr/local/freeswitch/recordings
+      - freeswitch_two_storage:/usr/local/freeswitch/storage
+      - freeswitch_two_scripts:/usr/local/freeswitch/scripts
       - "${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
     expose:
@@ -106,6 +116,11 @@ services:
       - freeswitch_one
     volumes:
       - freeswitch_one_conf:/etc/freeswitch
+      - freeswitch_one_sounds:/usr/local/freeswitch/sounds
+      - freeswitch_one_db:/var/lib/freeswitch/db
+      - freeswitch_one_recordings:/var/lib/freeswitch/recordings
+      - freeswitch_one_storage:/var/lib/freeswitch/storage
+      - freeswitch_one_scripts:/usr/share/freeswitch/scripts
     entrypoint: ["/usr/local/bin/setup-fusionpbx.sh"]
     environment:
       - ADMIN_USERNAME=${FUSIONPBX_ONE_ADMIN_USERNAME}
@@ -137,6 +152,11 @@ services:
       - freeswitch_two
     volumes:
       - freeswitch_two_conf:/etc/freeswitch
+      - freeswitch_two_sounds:/usr/local/freeswitch/sounds
+      - freeswitch_two_db:/var/lib/freeswitch/db
+      - freeswitch_two_recordings:/var/lib/freeswitch/recordings
+      - freeswitch_two_storage:/var/lib/freeswitch/storage
+      - freeswitch_two_scripts:/usr/share/freeswitch/scripts
     entrypoint: ["/usr/local/bin/setup-fusionpbx.sh"]
     environment:
       - ADMIN_USERNAME=${FUSIONPBX_TWO_ADMIN_USERNAME}
@@ -202,5 +222,15 @@ volumes:
   postgres_two_volume: {}
   postgres_kamailio_volume: {}
   freeswitch_one_conf: {}
+  freeswitch_one_sounds: {}
+  freeswitch_one_db: {}
+  freeswitch_one_recordings: {}
+  freeswitch_one_storage: {}
+  freeswitch_one_scripts: {}
   freeswitch_two_conf: {}
+  freeswitch_two_sounds: {}
+  freeswitch_two_db: {}
+  freeswitch_two_recordings: {}
+  freeswitch_two_storage: {}
+  freeswitch_two_scripts: {}
   traefik_letsencrypt: {}
