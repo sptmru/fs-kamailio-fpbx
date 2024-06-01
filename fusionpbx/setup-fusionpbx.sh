@@ -11,6 +11,8 @@ ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-adminpass}
 DOMAIN_NAME=${DOMAIN_NAME:-example.com}
 
+FS_HOST=${FS_HOST:-localhost}
+
 # Set the FusionPBX database configuration in the database initializing file
 sed -i "s|{admin_username}|${ADMIN_USERNAME}|" /var/www/fusionpbx/db-init.php
 sed -i "s|{admin_password}|${ADMIN_PASSWORD}|" /var/www/fusionpbx/db-init.php
@@ -31,6 +33,8 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 
 # Initialize the FusionPBX database
 /usr/local/bin/php /var/www/fusionpbx/db-init.php
+
+echo "switch.event_socket.host = $FS_HOST" >> /etc/fusionpbx/config.conf
 
 # Start web server
 exec apache2-foreground
