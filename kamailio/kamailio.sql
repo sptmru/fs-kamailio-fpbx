@@ -660,6 +660,7 @@ ALTER TABLE public.domain OWNER TO postgres;
 CREATE TABLE public.domain_attrs (
     id integer NOT NULL,
     did character varying(64) NOT NULL,
+    domain character varying(64) NOT NULL,
     name character varying(32) NOT NULL,
     type integer NOT NULL,
     value character varying(255) NOT NULL,
