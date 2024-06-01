@@ -28,6 +28,8 @@ services:
     restart: unless-stopped
     volumes:
       - "${PWD}/kamailio:/etc/kamailio:rw"
+    depends_on:
+      - postgres_kamailio
     networks:
       nw-default:
         ipv4_address: 10.1.0.200
