@@ -29,7 +29,8 @@ services:
     volumes:
       - "${PWD}/kamailio:/etc/kamailio:rw"
     depends_on:
-      - postgres_kamailio
+      postgres_kamailio:
+        condition: service_healthy
     networks:
       nw-default:
         ipv4_address: 10.1.0.200
@@ -44,6 +45,10 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: kamailio
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     volumes:
       - postgres_kamailio_volume:/var/lib/postgresql/data
       - "${PWD}/kamailio:/etc/kamailio:rw"
@@ -60,6 +65,9 @@ services:
     build:
       context: ./freeswitch
       dockerfile: Dockerfile
+    depends_on:
+      postgres_one:
+        condition: service_healthy
     volumes:
       - freeswitch_one_conf:/usr/local/freeswitch/conf
       - freeswitch_one_sounds:/usr/local/freeswitch/sounds
@@ -85,6 +93,9 @@ services:
     build:
       context: ./freeswitch
       dockerfile: Dockerfile
+    depends_on:
+      postgres_two:
+        condition: service_healthy
     volumes:
       - freeswitch_two_conf:/usr/local/freeswitch/conf
       - freeswitch_two_sounds:/usr/local/freeswitch/sounds
@@ -112,8 +123,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-      - postgres_one
-      - freeswitch_one
+      postgres_one:
+        condition: service_healthy
     volumes:
       - freeswitch_one_conf:/etc/freeswitch
       - freeswitch_one_sounds:/usr/local/freeswitch/sounds
@@ -148,8 +159,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-      - postgres_two
-      - freeswitch_two
+      postgres_two:
+        condition: service_healthy
     volumes:
       - freeswitch_two_conf:/etc/freeswitch
       - freeswitch_two_sounds:/usr/local/freeswitch/sounds
@@ -184,6 +195,10 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     volumes:
       - postgres_one_volume:/var/lib/postgresql/data
     expose:
@@ -200,6 +215,10 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     volumes:
       - postgres_two_volume:/var/lib/postgresql/data
     expose:
