@@ -1,7 +1,6 @@
 <configuration name="lcr.conf" description="LCR Configuration">
   <settings>
-    <param name="odbc-dsn" value="freeswitch-mysql:freeswitch:Fr33Sw1tch"/>
-<!--    <param name="odbc-dsn" value="freeswitch-pgsql:freeswitch:Fr33Sw1tch"/> -->
+    <param name="odbc-dsn" value="$${dsn_system}"/>
   </settings>
   <profiles>
     <profile name="default">
@@ -16,7 +15,7 @@
       <param name="id" value="2"/>
       <param name="order_by" value="reliability,quality"/>
     </profile>
-<!-- 
+<!--
   Some samples of how to do custom SQL:
 
     =============================================================

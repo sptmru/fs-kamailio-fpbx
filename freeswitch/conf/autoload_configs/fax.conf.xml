@@ -2,11 +2,11 @@
     <settings>
 	<param name="use-ecm"		value="true"/>
 	<param name="verbose"		value="false"/>
-	<param name="disable-v17"	value="false"/>
+	<param name="disable-v17"	value="true"/>
 	<param name="ident"		value="SpanDSP Fax Ident"/>
 	<param name="header"		value="SpanDSP Fax Header"/>
 
-	<param name="spool-dir"		value="$${temp_dir}"/>
+	<param name="spool-dir"		value="/tmp"/>
 	<param name="file-prefix"	value="faxrx"/>
     </settings>
 </configuration>
