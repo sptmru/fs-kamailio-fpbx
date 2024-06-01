@@ -21,6 +21,14 @@ sed -i "s|{database_name}|${DB_NAME}|" /var/www/fusionpbx/db-init.php
 sed -i "s|{database_username}|${DB_USERNAME}|" /var/www/fusionpbx/db-init.php
 sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 
+# Update FS directories permissions
+/bin/chmod -R 777 /etc/freeswitch
+/bin/chmod -R 777 /usr/local/freeswitch/sounds
+/bin/chmod -R 777 /var/lib/freeswitch/db
+/bin/chmod -R 777 /var/lib/freeswitch/recordings
+/bin/chmod -R 777 /var/lib/freeswitch/storage
+/bin/chmod -R 777 /usr/share/freeswitch/scripts
+
 # Initialize the FusionPBX database
 /usr/local/bin/php /var/www/fusionpbx/db-init.php
 
