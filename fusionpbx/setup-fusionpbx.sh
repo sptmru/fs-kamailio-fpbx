@@ -11,13 +11,7 @@ ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
 ADMIN_PASSWORD=${ADMIN_PASSWORD:-adminpass}
 DOMAIN_NAME=${DOMAIN_NAME:-example.com}
 
-# # Update the FusionPBX configuration
-# sed -i "s|{database_host}|${DB_HOST}|" /etc/fusionpbx/config.conf
-# sed -i "s|{database_port}|${DB_PORT}|" /etc/fusionpbx/config.conf
-# sed -i "s|{database_name}|${DB_NAME}|" /etc/fusionpbx/config.conf
-# sed -i "s|{database_username}|${DB_USERNAME}|" /etc/fusionpbx/config.conf
-# sed -i "s|{database_password}|${DB_PASS}|" /etc/fusionpbx/config.conf
-
+# Set the FusionPBX database configuration in the database initializing file
 sed -i "s|{admin_username}|${ADMIN_USERNAME}|" /var/www/fusionpbx/db-init.php
 sed -i "s|{admin_password}|${ADMIN_PASSWORD}|" /var/www/fusionpbx/db-init.php
 sed -i "s|{domain_name}|${DOMAIN_NAME}|" /var/www/fusionpbx/db-init.php
@@ -30,5 +24,5 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 # Initialize the FusionPBX database
 /usr/local/bin/php /var/www/fusionpbx/db-init.php
 
-# Start Apache server
+# Start web server
 exec apache2-foreground
