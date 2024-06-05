@@ -2170,6 +2170,8 @@ CREATE TABLE public.subscriber (
 
 ALTER TABLE public.subscriber OWNER TO postgres;
 
+INSERT INTO public.subscriber VALUES (1, '1001', 'kamailio.fs-kamailio-fpbx.sptm.space', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a');
+INSERT INTO public.subscriber VALUES (2, '1002', 'kamailio.fs-kamailio-fpbx.sptm.space', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a');
 --
 -- Name: subscriber_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
