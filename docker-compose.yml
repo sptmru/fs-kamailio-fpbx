@@ -32,6 +32,8 @@ services:
     depends_on:
       postgres_kamailio:
         condition: service_healthy
+      rtpengine:
+        condition: service_healthy
     networks:
       nw-default:
         ipv4_address: 10.1.0.200
@@ -44,6 +46,10 @@ services:
   rtpengine:
     image: fonoster/rtpengine:latest
     network_mode: "host"
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep rtpengine"]
+      interval: 10s
+      retries: 5
     environment:
       PUBLIC_IP: ${DOCKER_HOST_ADDRESS}
       PORT_MIN: 10000
