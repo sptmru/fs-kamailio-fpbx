@@ -47,7 +47,7 @@ services:
     image: fonoster/rtpengine:latest
     network_mode: "host"
     healthcheck:
-      test: ["CMD-SHELL", "ps aux | grep rtpengine"]
+      test: ["CMD-SHELL", "apt-get update && apt-get install -y procps && ps aux | grep rtpengine"]
       interval: 10s
       retries: 5
     environment:
