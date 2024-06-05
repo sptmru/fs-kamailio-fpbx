@@ -653,6 +653,8 @@ CREATE TABLE public.domain (
 
 ALTER TABLE public.domain OWNER TO postgres;
 
+INSERT INTO public.domain (id, domain, did, last_modified) VALUES (1, 'kamailio.fs-kamailio-fpbx.sptm.space', '12341234', '2024-05-01 00:00:01');
+
 --
 -- Name: domain_attrs; Type: TABLE; Schema: public; Owner: postgres
 --
