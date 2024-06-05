@@ -1879,7 +1879,7 @@ CREATE TABLE public.rtpengine (
 
 ALTER TABLE public.rtpengine OWNER TO postgres;
 
-INSERT INTO public.rtpengine VALUES (1, 1, 'udp:host.docker.internal:22222', 1, 0, '2024-05-01 00:00:01');
+INSERT INTO public.rtpengine VALUES (1, 0, 'udp:host.docker.internal:22222', 1, 0, '2024-05-01 00:00:01');
 
 --
 -- Name: rtpengine_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
