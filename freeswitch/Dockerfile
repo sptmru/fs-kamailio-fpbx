@@ -52,10 +52,6 @@ RUN chown -R www-data:www-data /var/www/fusionpbx
 # Copy the Apache configuration file
 COPY apache-fusionpbx.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy the setup script
-COPY setup-fusionpbx.sh /usr/local/bin/setup-fusionpbx.sh
-RUN chmod +x /usr/local/bin/setup-fusionpbx.sh
-
 # Create /etc/fusionpbx directory
 RUN mkdir /etc/fusionpbx
 RUN chmod 777 /etc/fusionpbx
