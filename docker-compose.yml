@@ -99,6 +99,8 @@ services:
       - "5080/udp"
       - "5080"
       - "8021"
+      - "5060"
+      - "5060/udp"
     environment:
       - EXTENSION_PASSWORD=1234
     networks:
@@ -127,6 +129,8 @@ services:
       - "5080/udp"
       - "5080"
       - "8021"
+      - "5060"
+      - "5060/udp"
     environment:
       - EXTENSION_PASSWORD=1234
     networks:
