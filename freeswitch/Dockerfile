@@ -3,8 +3,7 @@ FROM debian:bookworm
 # Install necessary packages via APT
 RUN apt-get update \
   && apt-get install -y gnupg2 wget lsb-release git cmake curl vim libmariadb-dev libpq-dev \
-  libsqlite3-dev docker-php-ext-install pdo_mysql pdo_pgsql pdo_sqlite \
-  apache2 php libapache2-mod-php php-pgsql \
+  libsqlite3-dev apache2 php libapache2-mod-php php-pgsql php-mysql php-pdo php-pdo-sqlite php-gd \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
