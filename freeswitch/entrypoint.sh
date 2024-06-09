@@ -32,7 +32,7 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 /bin/chmod -R 777 /usr/share/freeswitch/scripts
 
 # Initialize the FusionPBX database
-/usr/local/bin/php /var/www/fusionpbx/db-init.php
+/usr/bin/php /var/www/fusionpbx/db-init.php
 
 # Start FreeSWITCH and Apache
-exec /usr/local/freeswitch/bin/freeswitch -nonat -nf -nc && exec apache2-foreground
+exec /usr/local/freeswitch/bin/freeswitch -nonat -nf -nc && source /etc/apache2/envvars && exec apache2 -DFOREGROUND
