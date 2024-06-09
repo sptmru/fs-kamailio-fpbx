@@ -35,7 +35,6 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 /usr/local/bin/php /var/www/fusionpbx/db-init.php
 
 echo "switch.event_socket.host = $FS_HOST" >> /etc/fusionpbx/config.conf
-sed -i 's/^error.reporting = user$/error.reporting = all/' /etc/fusionpbx/config.conf
 
 # Start web server
 exec apache2-foreground
