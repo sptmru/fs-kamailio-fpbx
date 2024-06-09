@@ -4,7 +4,7 @@ FROM debian:bookworm
 RUN apt-get update \
   && apt-get install -y gnupg2 wget lsb-release git cmake curl vim libmariadb-dev libpq-dev \
   libsqlite3-dev docker-php-ext-install pdo_mysql pdo_pgsql pdo_sqlite \
-  apache2 php libapache2-mod-php php5-pgsql \
+  apache2 php libapache2-mod-php php-pgsql \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
