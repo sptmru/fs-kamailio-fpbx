@@ -119,7 +119,7 @@ services:
     networks:
       nw-default:
         ipv4_address: 10.1.0.101
-    entrypoint: ["/bin/sh", "-c", exec /usr/local/bin/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c", "exec /usr/local/bin/entrypoint.sh"]
 
   freeswitch_two:
     container_name: freeswitch_two
