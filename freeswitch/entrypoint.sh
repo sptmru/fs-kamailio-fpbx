@@ -34,7 +34,5 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 # Initialize the FusionPBX database
 /usr/local/bin/php /var/www/fusionpbx/db-init.php
 
-sed -i '/<X-PRE-PROCESS cmd="set" data="default_password=[^"]*"\/>/c\<X-PRE-PROCESS cmd="set" data="default_password='"${EXTENSION_PASSWORD:-extensionpassword}"'"\/>' /usr/local/freeswitch/conf/vars.xml
-
 # Start FreeSWITCH and Apache
 exec /usr/local/freeswitch/bin/freeswitch -nonat -nf -nc && exec apache2-foreground
