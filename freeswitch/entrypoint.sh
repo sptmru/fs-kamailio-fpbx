@@ -31,6 +31,9 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 /bin/chmod -R 777 /usr/local/freeswitch/storage
 /bin/chmod -R 777 /usr/local/freeswitch/scripts
 
+/bin/chmod -R 777 /etc/fusionpbx
+/bin/chown -R www-data:www-data /etc/fusionpbx
+
 # Initialize the FusionPBX database
 /usr/bin/php /var/www/fusionpbx/db-init.php
 

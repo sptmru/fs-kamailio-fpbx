@@ -53,14 +53,11 @@ COPY apache-fusionpbx.conf /etc/apache2/sites-available/000-default.conf
 
 # Create /etc/fusionpbx directory
 RUN mkdir /etc/fusionpbx
-RUN chmod 777 /etc/fusionpbx
 
 # Copy the FusionPBX installation script
 COPY db-init.php /var/www/fusionpbx/db-init.php
 
 RUN ln -s /usr/local/freeswitch/conf /etc/freeswitch
-
-
 RUN chown -R www-data:www-data /usr/local/freeswitch/conf
 
 RUN sed -i '/<load module="mod_logfile"\/>/a \    <load module="mod_audio_stream"/>' /usr/local/freeswitch/conf/autoload_configs/modules.conf.xml
