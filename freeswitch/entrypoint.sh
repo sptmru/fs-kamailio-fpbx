@@ -42,7 +42,7 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 # /usr/local/freeswitch/bin/freeswitch -nonat -nf -nc &
 nginx
 /etc/init.d/php8.1-fpm start
-/etc/init.d/postgresql start
+# /etc/init.d/postgresql start
 /usr/bin/freeswitch -nonat -nf -nc
 # source /etc/apache2/envvars
 # exec apache2 -DFOREGROUND
