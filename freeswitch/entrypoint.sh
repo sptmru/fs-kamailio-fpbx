@@ -37,12 +37,13 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 # Initialize the FusionPBX database
 /usr/bin/rm /etc/fusionpbx/config.conf
 /usr/bin/php /var/www/fusionpbx/db-init.php
+mkdir -p /var/log/freeswitch
 
 # Start FreeSWITCH and Apache
 # /usr/local/freeswitch/bin/freeswitch -nonat -nf -nc &
 nginx
 /etc/init.d/php8.1-fpm start
 # /etc/init.d/postgresql start
-/usr/bin/freeswitch -conf /etc/freeswitch -nonat -nf -nc
+/usr/bin/freeswitch -conf /etc/freeswitch -db /var/lib/freeswitch/db -log /var/log/freeswitch -nonat -nf -nc
 # source /etc/apache2/envvars
 # exec apache2 -DFOREGROUND
