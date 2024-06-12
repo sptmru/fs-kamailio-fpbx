@@ -39,6 +39,7 @@
 
 # Start FreeSWITCH and Apache
 # /usr/local/freeswitch/bin/freeswitch -nonat -nf -nc &
+nginx
 /usr/bin/freeswitch -nonat -nf -nc
 # source /etc/apache2/envvars
 # exec apache2 -DFOREGROUND

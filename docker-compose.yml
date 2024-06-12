@@ -12,6 +12,7 @@ services:
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.email=${LETSENCRYPT_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--serversTransport.insecureSkipVerify=true"
     ports:
       - "80:80"
       - "443:443"
@@ -116,7 +117,9 @@ services:
       - "traefik.http.routers.fusionpbx_one.rule=Host(`${FUSIONPBX_ONE_DOMAIN}`)"
       - "traefik.http.routers.fusionpbx_one.entrypoints=websecure"
       - "traefik.http.routers.fusionpbx_one.tls.certresolver=myresolver"
+      - "traefik.http.routers.fusionpbx_one.tls=true"
       - "traefik.http.services.fusionpbx_one.loadbalancer.server.port=443"
+      - "traefik.http.services.fusionpbx_one.loadbalancer.server.scheme=https"
     networks:
       nw-default:
         ipv4_address: 10.1.0.101
@@ -160,7 +163,9 @@ services:
       - "traefik.http.routers.fusionpbx_two.rule=Host(`${FUSIONPBX_TWO_DOMAIN}`)"
       - "traefik.http.routers.fusionpbx_two.entrypoints=websecure"
       - "traefik.http.routers.fusionpbx_two.tls.certresolver=myresolver"
+      - "traefik.http.routers.fusionpbx_two.tls=true"
       - "traefik.http.services.fusionpbx_two.loadbalancer.server.port=443"
+      - "traefik.http.services.fusionpbx_two.loadbalancer.server.scheme=https"
     networks:
       nw-default:
         ipv4_address: 10.1.0.102
