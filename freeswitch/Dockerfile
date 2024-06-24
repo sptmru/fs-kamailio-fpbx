@@ -8,9 +8,12 @@ RUN wget -O - https://raw.githubusercontent.com/fusionpbx/fusionpbx-install.sh/m
 RUN cd /usr/src/fusionpbx-install.sh/debian && ./install.sh
 
 # Copy the FusionPBX installation script
-# COPY db-init.php /var/www/fusionpbx/db-init.php
+COPY db-init.php /var/www/fusionpbx/db-init.php
 
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+RUN mkdir -p /etc/fusionpbx
+RUN chmod -R 777 /etc/fusionpbx
 
 ENTRYPOINT ["entrypoint.sh"]
