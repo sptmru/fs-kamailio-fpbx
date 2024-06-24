@@ -35,31 +35,29 @@ $debug = false;
 
 $domain_uuid = uuid();
 
-
-$_SESSION['install']['admin_username'] = "{admin_username}";
-$_SESSION['install']['admin_password'] = "{admin_password}";
-$_SESSION['install']['domain_name'] = "{domain_name}";
-$_SESSION['install']['database_host'] = "{database_host}";
-$_SESSION['install']['database_port'] = "{database_port}";
-$_SESSION['install']['database_name'] = "{database_name}";
-$_SESSION['install']['database_username'] = "{database_username}";
-$_SESSION['install']['database_password'] = "{database_password}";
-
+$session_admin_username = "{admin_username}";
+$session_admin_password = "{admin_password}";
+$session_domain_name = "{domain_name}";
+$session_database_host = "{database_host}";
+$session_database_port = "{database_port}";
+$session_database_name = "{database_name}";
+$session_database_username = "{database_username}";
+$session_database_password = "{database_password}";
 
 //build the config file
 $install = new install;
-$install->database_host = $_SESSION['install']['database_host'];
-$install->database_port = $_SESSION['install']['database_port'];
-$install->database_name = $_SESSION['install']['database_name'];
-$install->database_username = $_SESSION['install']['database_username'];
-$install->database_password = $_SESSION['install']['database_password'];
+$install->database_host = $session_database_host;
+$install->database_port = $session_database_port;
+$install->database_name = $session_database_name;
+$install->database_username = $session_database_username;
+$install->database_password = $session_database_password;
 $result = $install->config();
 
-$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
+$output = shell_exec('cd /var/www/fusionpbx/ && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
 require_once "/var/www/fusionpbx/resources/require.php";
 
 //get the domain name
-$domain_name = $_SESSION['install']['domain_name'];
+$domain_name = $session_domain_name;
 
 //check to see if the domain name exists if it does update the domain_uuid
 $sql = "select domain_uuid from v_domains ";
@@ -107,11 +105,11 @@ $_SESSION['domain_uuid'] = $domain_uuid;
 $_SESSION['domain_name'] = $domain_name;
 
 //app defaults
-$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+$output = shell_exec('cd /var/www/fusionpbx/ && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
 
 //prepare the user settings
-$admin_username = $_SESSION['install']['admin_username'];
-$admin_password = $_SESSION['install']['admin_password'];
+$admin_username = $session_admin_username;
+$admin_password = $session_admin_password;
 $user_salt = uuid();
 $password_hash = md5($user_salt . $admin_password);
 
@@ -179,7 +177,7 @@ $p->delete("user_group_add", "temp");
 
 //update xml_cdr url, user and password in xml_cdr.conf.xml
 if (!$domain_exists) {
-  if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/xml_cdr")) {
+  if (file_exists("/var/www/fusionpbx/app/xml_cdr")) {
     xml_cdr_conf_xml();
   }
 }
@@ -192,9 +190,11 @@ if (!$domain_exists) {
 }
 
 #app defaults
-$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+$output = shell_exec('cd /var/www/fusionpbx/ && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
 
 //set the max execution time to 1 hour
 ini_set('max_execution_time',3600);
+
+$domain_name - $session_domain_name;
 
 ?>
