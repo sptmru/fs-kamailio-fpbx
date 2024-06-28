@@ -40,9 +40,9 @@ services:
         ipv4_address: 10.1.0.200
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    ports:
-      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}/udp"
-      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}"
+    # ports:
+    #   - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}/udp"
+    #   - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}"
   
   rtpengine:
     image: fonoster/rtpengine:latest
@@ -96,12 +96,18 @@ services:
       - freeswitch_one_scripts:/usr/local/freeswitch/scripts
       # - "${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
-    expose:
-      - "5080/udp"
-      - "5080"
-      - "8021"
-      - "5060"
-      - "5060/udp"
+    # expose:
+    #   - "5080/udp"
+    #   - "5080"
+    #   - "8021"
+    #   - "5060"
+    #   - "5060/udp"
+    ports:
+      - "5080:5080/udp"
+      - "5080:5080"
+      - "8021:8021"
+      - "5060:5060"
+      - "5060:5060/udp"
     environment:
       - ADMIN_USERNAME=${FUSIONPBX_ONE_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${FUSIONPBX_ONE_ADMIN_PASSWORD}
