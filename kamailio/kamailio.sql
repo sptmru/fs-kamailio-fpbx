@@ -653,6 +653,8 @@ CREATE TABLE public.domain (
 
 ALTER TABLE public.domain OWNER TO postgres;
 
+INSERT INTO public.domain (id, domain, did, last_modified) VALUES (1, 'kamailio.fs-kamailio-fpbx.sptm.space', '12341234', '2024-05-01 00:00:01');
+
 --
 -- Name: domain_attrs; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -1879,6 +1881,8 @@ CREATE TABLE public.rtpengine (
 
 ALTER TABLE public.rtpengine OWNER TO postgres;
 
+INSERT INTO public.rtpengine VALUES (1, 0, 'udp:host.docker.internal:22222', 1, 0, '2024-05-01 00:00:01');
+
 --
 -- Name: rtpengine_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
@@ -2168,6 +2172,8 @@ CREATE TABLE public.subscriber (
 
 ALTER TABLE public.subscriber OWNER TO postgres;
 
+INSERT INTO public.subscriber VALUES (1, '1001', 'kamailio.fs-kamailio-fpbx.sptm.space', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a');
+INSERT INTO public.subscriber VALUES (2, '1002', 'kamailio.fs-kamailio-fpbx.sptm.space', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a', 'E3aCjm2v!u36d5w77Ejz$5Qw8CRksKt#3*a');
 --
 -- Name: subscriber_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --

@@ -12,10 +12,12 @@ services:
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.email=${LETSENCRYPT_EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--serversTransport.insecureSkipVerify=true"
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+    expose:
+      - "8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "traefik_letsencrypt:/letsencrypt"
@@ -29,13 +31,31 @@ services:
     volumes:
       - "${PWD}/kamailio:/etc/kamailio:rw"
     depends_on:
-      - postgres_kamailio
+      postgres_kamailio:
+        condition: service_healthy
+      rtpengine:
+        condition: service_healthy
     networks:
       nw-default:
         ipv4_address: 10.1.0.200
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}/udp"
       - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}"
+  
+  rtpengine:
+    image: fonoster/rtpengine:latest
+    network_mode: "host"
+    healthcheck:
+      test: ["CMD-SHELL", "apt-get update && apt-get install -y procps && ps aux | grep rtpengine"]
+      interval: 10s
+      retries: 5
+    environment:
+      PUBLIC_IP: ${DOCKER_HOST_ADDRESS}
+      PORT_MIN: 10000
+      PORT_MAX: 20000
+      LOG_LEVEL: '6'
   
   postgres_kamailio:
     container_name: postgres_kamailio
@@ -44,12 +64,16 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: kamailio
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     volumes:
       - postgres_kamailio_volume:/var/lib/postgresql/data
       - "${PWD}/kamailio:/etc/kamailio:rw"
       - "${PWD}/kamailio/kamailio.sql:/docker-entrypoint-initdb.d/init.sql"
-    expose:
-      - "5432"
+    ports:
+      - "5432:5432"
     restart: unless-stopped
     networks:
       nw-default:
@@ -60,53 +84,24 @@ services:
     build:
       context: ./freeswitch
       dockerfile: Dockerfile
+    depends_on:
+      postgres_one:
+        condition: service_healthy
     volumes:
       - freeswitch_one_conf:/usr/local/freeswitch/conf
-      - "${PWD}/freeswitch/conf:/mnt/conf:ro"
+      - freeswitch_one_sounds:/usr/local/freeswitch/sounds
+      - freeswitch_one_db:/usr/local/freeswitch/db
+      - freeswitch_one_recordings:/usr/local/freeswitch/recordings
+      - freeswitch_one_storage:/usr/local/freeswitch/storage
+      - freeswitch_one_scripts:/usr/local/freeswitch/scripts
+      # - "${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
     expose:
       - "5080/udp"
       - "5080"
       - "8021"
-    environment:
-      - EXTENSION_PASSWORD=1234
-    networks:
-      nw-default:
-        ipv4_address: 10.1.0.101
-    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /usr/local/bin/entrypoint.sh"]
-
-  freeswitch_two:
-    container_name: freeswitch_two
-    build:
-      context: ./freeswitch
-      dockerfile: Dockerfile
-    volumes:
-      - freeswitch_two_conf:/usr/local/freeswitch/conf
-      - "${PWD}/freeswitch/conf:/mnt/conf:ro"
-    restart: unless-stopped
-    expose:
-      - "5080/udp"
-      - "5080"
-      - "8021"
-    environment:
-      - EXTENSION_PASSWORD=1234
-    networks:
-      nw-default:
-        ipv4_address: 10.1.0.102
-    entrypoint: ["/bin/sh", "-c", "cp -r /mnt/conf/* /usr/local/freeswitch/conf && exec /usr/local/bin/entrypoint.sh"]
-
-  fusionpbx_one:
-    container_name: fusionpbx_one
-    build:
-      context: ./fusionpbx
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    depends_on:
-      - postgres_one
-      - freeswitch_one
-    volumes:
-      - freeswitch_one_conf:/etc/freeswitch
-    entrypoint: ["/usr/local/bin/setup-fusionpbx.sh"]
+      - "5060"
+      - "5060/udp"
     environment:
       - ADMIN_USERNAME=${FUSIONPBX_ONE_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${FUSIONPBX_ONE_ADMIN_PASSWORD}
@@ -116,28 +111,43 @@ services:
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_HOST=postgres_one
+      - FS_HOST=freeswitch_one
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fusionpbx_one.rule=Host(`${FUSIONPBX_ONE_DOMAIN}`)"
       - "traefik.http.routers.fusionpbx_one.entrypoints=websecure"
       - "traefik.http.routers.fusionpbx_one.tls.certresolver=myresolver"
-      - "traefik.http.services.fusionpbx_one.loadbalancer.server.port=80"
+      - "traefik.http.routers.fusionpbx_one.tls=true"
+      - "traefik.http.services.fusionpbx_one.loadbalancer.server.port=443"
+      - "traefik.http.services.fusionpbx_one.loadbalancer.server.scheme=https"
     networks:
       nw-default:
-        ipv4_address: 10.1.0.11
+        ipv4_address: 10.1.0.101
+    entrypoint: ["/bin/sh", "-c", "exec /usr/local/bin/entrypoint.sh"]
 
-  fusionpbx_two:
-    container_name: fusionpbx_two
+  freeswitch_two:
+    container_name: freeswitch_two
     build:
-      context: ./fusionpbx
+      context: ./freeswitch
       dockerfile: Dockerfile
-    restart: unless-stopped
     depends_on:
-      - postgres_two
-      - freeswitch_two
+      postgres_two:
+        condition: service_healthy
     volumes:
-      - freeswitch_two_conf:/etc/freeswitch
-    entrypoint: ["/usr/local/bin/setup-fusionpbx.sh"]
+      - freeswitch_two_conf:/usr/local/freeswitch/conf
+      - freeswitch_two_sounds:/usr/local/freeswitch/sounds
+      - freeswitch_two_db:/usr/local/freeswitch/db
+      - freeswitch_two_recordings:/usr/local/freeswitch/recordings
+      - freeswitch_two_storage:/usr/local/freeswitch/storage
+      - freeswitch_two_scripts:/usr/local/freeswitch/scripts
+      # - "${PWD}/freeswitch/conf:/mnt/conf:ro"
+    restart: unless-stopped
+    expose:
+      - "5080/udp"
+      - "5080"
+      - "8021"
+      - "5060"
+      - "5060/udp"
     environment:
       - ADMIN_USERNAME=${FUSIONPBX_TWO_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${FUSIONPBX_TWO_ADMIN_PASSWORD}
@@ -147,15 +157,19 @@ services:
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_HOST=postgres_two
+      - FS_HOST=freeswitch_two
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fusionpbx_two.rule=Host(`${FUSIONPBX_TWO_DOMAIN}`)"
       - "traefik.http.routers.fusionpbx_two.entrypoints=websecure"
       - "traefik.http.routers.fusionpbx_two.tls.certresolver=myresolver"
-      - "traefik.http.services.fusionpbx_two.loadbalancer.server.port=80"
+      - "traefik.http.routers.fusionpbx_two.tls=true"
+      - "traefik.http.services.fusionpbx_two.loadbalancer.server.port=443"
+      - "traefik.http.services.fusionpbx_two.loadbalancer.server.scheme=https"
     networks:
       nw-default:
-        ipv4_address: 10.1.0.12
+        ipv4_address: 10.1.0.102
+    entrypoint: ["/bin/sh", "-c", "exec /usr/local/bin/entrypoint.sh"]
 
   postgres_one:
     container_name: postgres_one
@@ -164,10 +178,14 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     volumes:
       - postgres_one_volume:/var/lib/postgresql/data
-    expose:
-      - "5432"
+    ports:
+      - "5433:5432"
     restart: unless-stopped
     networks:
       nw-default:
@@ -180,10 +198,14 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
     volumes:
       - postgres_two_volume:/var/lib/postgresql/data
-    expose:
-      - "5432"
+    ports:
+      - "5434:5432"
     restart: unless-stopped
     networks:
       nw-default:
@@ -202,5 +224,15 @@ volumes:
   postgres_two_volume: {}
   postgres_kamailio_volume: {}
   freeswitch_one_conf: {}
+  freeswitch_one_sounds: {}
+  freeswitch_one_db: {}
+  freeswitch_one_recordings: {}
+  freeswitch_one_storage: {}
+  freeswitch_one_scripts: {}
   freeswitch_two_conf: {}
+  freeswitch_two_sounds: {}
+  freeswitch_two_db: {}
+  freeswitch_two_recordings: {}
+  freeswitch_two_storage: {}
+  freeswitch_two_scripts: {}
   traefik_letsencrypt: {}
