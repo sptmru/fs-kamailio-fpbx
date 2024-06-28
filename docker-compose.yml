@@ -94,7 +94,7 @@ services:
       - freeswitch_one_recordings:/usr/local/freeswitch/recordings
       - freeswitch_one_storage:/usr/local/freeswitch/storage
       - freeswitch_one_scripts:/usr/local/freeswitch/scripts
-      # - "${PWD}/freeswitch/conf:/mnt/conf:ro"
+      - ${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
     expose:
       - "5080/udp"
@@ -140,7 +140,7 @@ services:
       - freeswitch_two_recordings:/usr/local/freeswitch/recordings
       - freeswitch_two_storage:/usr/local/freeswitch/storage
       - freeswitch_two_scripts:/usr/local/freeswitch/scripts
-      # - "${PWD}/freeswitch/conf:/mnt/conf:ro"
+      - ${PWD}/freeswitch/conf:/mnt/conf:ro"
     restart: unless-stopped
     expose:
       - "5080/udp"

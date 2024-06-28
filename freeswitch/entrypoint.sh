@@ -39,6 +39,11 @@ sed -i "s|{database_password}|${DB_PASSWORD}|" /var/www/fusionpbx/db-init.php
 /usr/bin/php /var/www/fusionpbx/db-init.php
 mkdir -p /var/log/freeswitch
 
+mv /etc/freeswitch /etc/freeswitch.bak
+cp -R /mnt/conf /etc/freeswitch
+chown -R www-data:www-data /etc/freeswitch
+chmod -R 777 /etc/freeswitch
+
 # Start FreeSWITCH and Apache
 # /usr/local/freeswitch/bin/freeswitch -nonat -nf -nc &
 nginx
