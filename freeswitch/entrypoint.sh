@@ -46,4 +46,4 @@ nginx
 # /etc/init.d/postgresql start
 /usr/bin/freeswitch -conf /etc/freeswitch -db /var/lib/freeswitch/db -log /var/log/freeswitch -nonat -nf -nc
 # source /etc/apache2/envvars
-exec apache2 -DFOREGROUND
+# exec apache2 -DFOREGROUND
