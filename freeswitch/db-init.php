@@ -195,6 +195,6 @@ $output = shell_exec('cd /var/www/fusionpbx/ && php /var/www/fusionpbx/core/upgr
 //set the max execution time to 1 hour
 ini_set('max_execution_time',3600);
 
-$domain_name - $session_domain_name;
+$domain_name = $session_domain_name;
 
 ?>
