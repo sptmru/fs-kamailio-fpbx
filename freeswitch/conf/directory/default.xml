@@ -1,9 +1,11 @@
-<domain name="default">
-  <params>
-    <param name="dial-string" value="{sip_invite_domain=${domain_name},presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(${dialed_user}@${dialed_domain})}"/>
-  </params>
-  <variables>
-    <variable name="record_stereo" value="true"/>
-    <variable name="default_gateway" value="example.com"/>
-  </variables>
-</domain>
+<include>
+  <domain name="all">
+    <params>
+      <param name="dial-string" value="{sip_invite_domain=${domain_name},presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(${dialed_user}@${dialed_domain})}"/>
+    </params>
+    <variables>
+      <variable name="record_stereo" value="true"/>
+      <variable name="default_gateway" value="example.com"/>
+    </variables>
+  </domain>
+</include>
