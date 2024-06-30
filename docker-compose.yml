@@ -35,7 +35,14 @@ services:
         condition: service_healthy
       rtpengine:
         condition: service_healthy
-    network_mode: host
+    networks:
+      nw-default:
+        ipv4_address: 10.1.0.200
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}/udp"
+      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}"
 
   rtpengine:
     image: fonoster/rtpengine:latest
