@@ -35,15 +35,8 @@ services:
         condition: service_healthy
       rtpengine:
         condition: service_healthy
-    networks:
-      nw-default:
-        ipv4_address: 10.1.0.200
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}/udp"
-      - "${KAMAILIO_PORT:-5060}:${KAMAILIO_PORT:-5060}"
-  
+    network_mode: host
+
   rtpengine:
     image: fonoster/rtpengine:latest
     network_mode: "host"
@@ -56,7 +49,7 @@ services:
       PORT_MIN: 10000
       PORT_MAX: 20000
       LOG_LEVEL: '6'
-  
+
   postgres_kamailio:
     container_name: postgres_kamailio
     image: postgres:16.1
@@ -99,6 +92,8 @@ services:
     expose:
       - "5080/udp"
       - "5080"
+      - "5090/udp"
+      - "5090"
       - "8021"
       - "5060"
       - "5060/udp"
@@ -120,6 +115,8 @@ services:
       - "traefik.http.routers.fusionpbx_one.tls=true"
       - "traefik.http.services.fusionpbx_one.loadbalancer.server.port=443"
       - "traefik.http.services.fusionpbx_one.loadbalancer.server.scheme=https"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       nw-default:
         ipv4_address: 10.1.0.101
@@ -145,6 +142,8 @@ services:
     expose:
       - "5080/udp"
       - "5080"
+      - "5090/udp"
+      - "5090"
       - "8021"
       - "5060"
       - "5060/udp"
@@ -166,6 +165,8 @@ services:
       - "traefik.http.routers.fusionpbx_two.tls=true"
       - "traefik.http.services.fusionpbx_two.loadbalancer.server.port=443"
       - "traefik.http.services.fusionpbx_two.loadbalancer.server.scheme=https"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       nw-default:
         ipv4_address: 10.1.0.102
