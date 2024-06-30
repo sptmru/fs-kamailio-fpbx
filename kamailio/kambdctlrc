@@ -18,7 +18,7 @@
 DBENGINE=PGSQL
 
 ## database host
-DBHOST=localhost
+DBHOST=postgres_kamailio
 
 ## database port
 DBPORT=5432
