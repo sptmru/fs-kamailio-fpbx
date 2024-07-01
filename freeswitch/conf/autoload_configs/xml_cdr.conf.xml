@@ -4,7 +4,7 @@
     <!--<param name="url" value="http://127.0.0.1/app/xml_cdr/xml_cdr_import.php"/>-->
 
     <!-- optional: credentials to send to web server -->
-    <!--<param name="cred" value="{v_user}:{v_pass}"/>-->
+    <!--<param name="cred" value="4gtmcWjCiGEhKLSjZwqWUea0s:u15Sx7Y2ZBE1fpLUHSLZ0kjqfo"/>-->
 
     <!-- the total number of retries (not counting the first 'try') to post to webserver incase of failure -->
     <!-- <param name="retries" value="2"/> -->

@@ -1,0 +1,2 @@
+DBENGINE=PGSQL
+DBURL="postgres://postgres:slakn09adsfm2@postgres_kamailio:5432/kamailio"
